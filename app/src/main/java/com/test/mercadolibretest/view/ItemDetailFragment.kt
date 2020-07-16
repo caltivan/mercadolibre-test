@@ -1,4 +1,4 @@
-package com.test.mercadolibretest
+package com.test.mercadolibretest.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.test.mercadolibretest.dummy.DummyContent
+import com.test.mercadolibretest.R
+import com.test.mercadolibretest.model.dummy.DummyContent
 
 /**
  * A fragment representing a single Item detail screen.

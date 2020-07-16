@@ -1,4 +1,4 @@
-package com.test.mercadolibretest
+package com.test.mercadolibretest.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,8 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.test.mercadolibretest.R
 
-import com.test.mercadolibretest.dummy.DummyContent
+import com.test.mercadolibretest.model.dummy.DummyContent
 
 /**
  * An activity representing a list of Pings. This activity
@@ -56,7 +57,12 @@ class ItemListActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, twoPane)
+        recyclerView.adapter =
+            SimpleItemRecyclerViewAdapter(
+                this,
+                DummyContent.ITEMS,
+                twoPane
+            )
     }
 
     class SimpleItemRecyclerViewAdapter(private val parentActivity: ItemListActivity,
@@ -70,7 +76,8 @@ class ItemListActivity : AppCompatActivity() {
             onClickListener = View.OnClickListener { v ->
                 val item = v.tag as DummyContent.DummyItem
                 if (twoPane) {
-                    val fragment = ItemDetailFragment().apply {
+                    val fragment = ItemDetailFragment()
+                        .apply {
                         arguments = Bundle().apply {
                             putString(ItemDetailFragment.ARG_ITEM_ID, item.id)
                         }

@@ -1,4 +1,4 @@
-package com.test.mercadolibretest.dummy
+package com.test.mercadolibretest.model.dummy
 
 import java.util.ArrayList
 import java.util.HashMap
