@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.test.mercadolibretest"
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -26,14 +26,27 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    /// Android Libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.core:core-ktx:1.3.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'
-    testImplementation 'junit:junit:4.12'
+
+    /// Architecture Libraries
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.koin:koin-android:0.9.3'
+    implementation 'org.koin:koin-android-architecture:0.9.3'
+
+    /// Test Libraries
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    /// Miscellaneous Libraries
+    implementation 'com.google.code.gson:gson:2.8.6'
+
 
 }
