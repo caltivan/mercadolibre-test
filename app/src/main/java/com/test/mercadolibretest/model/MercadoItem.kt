@@ -8,7 +8,7 @@ data class MercadoItem(
 
     @SerializedName("title") var title: String,
 
-    @SerializedName("price") var price: Int,
+    @SerializedName("price") var price: Integer,
 
     @SerializedName("currency_id") var currencyId: String,
 
