@@ -17,10 +17,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.test.mercadolibretest.R
+import com.test.mercadolibretest.databinding.ActivitySearchItemListBinding
 
 import com.test.mercadolibretest.model.dummy.DummyContent
 import com.test.mercadolibretest.provider.SearchSuggestionProvider
+import com.test.mercadolibretest.viewmodel.MainSearchViewModel
 
 /**
  * An activity representing a list of Pings. This activity
@@ -37,10 +41,16 @@ class MainSearchActivity : AppCompatActivity() {
      * device.
      */
     private var twoPane: Boolean = false
+    private lateinit var pianoViewModel: MainSearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_item_list)
+
+        val binding: ActivitySearchItemListBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_search_item_list)
+
+        pianoViewModel = ViewModelProvider(this).get(MainSearchViewModel::class.java)
+        binding.viewModel = pianoViewModel
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -62,17 +72,17 @@ class MainSearchActivity : AppCompatActivity() {
         setupRecyclerView(findViewById(R.id.item_list))
 
         // Search bar intent handling
-        handleIntent(intent)
+        handleSearchIntent(intent)
 
 
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleIntent(intent)
+        handleSearchIntent(intent)
     }
 
-    private fun handleIntent(intent: Intent) {
+    private fun handleSearchIntent(intent: Intent) {
         if (Intent.ACTION_SEARCH == intent.action) {
             val query = intent.getStringExtra(SearchManager.QUERY)
             //use the query to search your data somehow
@@ -81,8 +91,10 @@ class MainSearchActivity : AppCompatActivity() {
             intent.getStringExtra(SearchManager.QUERY)?.also { query ->
                 SearchRecentSuggestions(
                     this,
-                    SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE
+                    SearchSuggestionProvider.AUTHORITY,
+                    SearchSuggestionProvider.MODE
                 ).saveRecentQuery(query, null)
+                pianoViewModel.startItemSearch(query)
             }
         }
     }
