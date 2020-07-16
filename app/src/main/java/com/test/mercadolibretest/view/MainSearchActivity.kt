@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.test.mercadolibretest.R
 import com.test.mercadolibretest.databinding.ActivitySearchItemListBinding
-import com.test.mercadolibretest.model.dummy.DummyContent
 import com.test.mercadolibretest.provider.SearchSuggestionProvider
 import com.test.mercadolibretest.viewmodel.MainSearchViewModel
 
@@ -115,7 +114,7 @@ class MainSearchActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
-        adapter = MercadoItemAdapter(this, DummyContent.ITEMS, twoPane)
+        adapter = MercadoItemAdapter(this, twoPane)
         recyclerView.adapter = adapter
         val dividerItemDecoration = DividerItemDecoration(recyclerView.context, 1)
         recyclerView.addItemDecoration(dividerItemDecoration)

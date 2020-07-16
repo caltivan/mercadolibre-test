@@ -51,7 +51,7 @@
                 android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{ Integer.toString(item.price) + item.currencyId}"
+                android:text="@{ Float.toString(item.price) + item.currencyId}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textStyle="bold"
                 tools:text="1000" />

@@ -1,7 +1,6 @@
 package com.test.mercadolibretest.view
 
 import android.content.Intent
-import android.nfc.tech.MifareClassic.get
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,33 +11,33 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.test.mercadolibretest.R
 import com.test.mercadolibretest.databinding.ItemListContentBinding
 import com.test.mercadolibretest.model.MercadoItem
-import com.test.mercadolibretest.model.dummy.DummyContent
-import com.test.mercadolibretest.util.MyAppExecutors
 import com.test.mercadolibretest.viewmodel.MainSearchViewModel
 
 
 class MercadoItemAdapter(
     private val parentActivity: MainSearchActivity,
-    private val values: List<DummyContent.DummyItem>,
     private val twoPane: Boolean
 ) : RecyclerView.Adapter<MercadoItemAdapter.AdapterViewHolder>() {
 
     private val onClickListener: View.OnClickListener
     private val mViewModel: MainSearchViewModel =
         ViewModelProvider(parentActivity).get<MainSearchViewModel>(MainSearchViewModel::class.java)
+    private val gson = Gson()
 
     init {
         onClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyContent.DummyItem
+            val item = v.tag as MercadoItem
             if (twoPane) {
                 val fragment = ItemDetailFragment()
                     .apply {
                         arguments = Bundle().apply {
-                            putString(ItemDetailFragment.ARG_ITEM_ID, item.id)
+                            val itemGson = gson.toJson(item)
+                            putString(ItemDetailFragment.ARG_ITEM_ID, itemGson)
                         }
                     }
                 parentActivity.supportFragmentManager
@@ -47,7 +46,8 @@ class MercadoItemAdapter(
                     .commit()
             } else {
                 val intent = Intent(v.context, ItemDetailActivity::class.java).apply {
-                    putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id)
+                    val itemGson = gson.toJson(item)
+                    putExtra(ItemDetailFragment.ARG_ITEM_ID, itemGson)
                 }
                 v.context.startActivity(intent)
             }
@@ -65,7 +65,10 @@ class MercadoItemAdapter(
     override fun onBindViewHolder(holder: AdapterViewHolder, position: Int) {
         val item = mViewModel.items.value!![position]
         holder.bind(mViewModel, item)
-
+        with(holder.itemView) {
+            tag = item
+            setOnClickListener(onClickListener)
+        }
 /*        val item = values[position]
         holder.idView.text = item.id
         holder.contentView.text = item.content

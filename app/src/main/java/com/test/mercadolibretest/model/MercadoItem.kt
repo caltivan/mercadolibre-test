@@ -8,15 +8,13 @@ data class MercadoItem(
 
     @SerializedName("title") var title: String,
 
-    @SerializedName("price") var price: Integer,
+    @SerializedName("price") var price: Float,
 
     @SerializedName("currency_id") var currencyId: String,
 
     @SerializedName("available_quantity") var availableQuantity: Int,
 
     @SerializedName("sold_quantity") var soldQuantity: Int,
-
-    @SerializedName("accepts_mercadopago") var acceptsMercadopago: Boolean,
 
     @SerializedName("condition") var condition: String = String(),
 
@@ -25,4 +23,5 @@ data class MercadoItem(
     @SerializedName("thumbnail") var thumbnail: String = String()
 
 )
+
 
