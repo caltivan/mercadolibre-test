@@ -1,7 +1,10 @@
 package com.test.mercadolibretest.view
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.SearchRecentSuggestions
 import androidx.core.widget.NestedScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -9,12 +12,15 @@ import androidx.appcompat.widget.Toolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.TextView
 import com.test.mercadolibretest.R
 
 import com.test.mercadolibretest.model.dummy.DummyContent
+import com.test.mercadolibretest.provider.SearchSuggestionProvider
 
 /**
  * An activity representing a list of Pings. This activity
@@ -24,7 +30,7 @@ import com.test.mercadolibretest.model.dummy.DummyContent
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-class ItemListActivity : AppCompatActivity() {
+class MainSearchActivity : AppCompatActivity() {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -42,7 +48,7 @@ class ItemListActivity : AppCompatActivity() {
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+                .setAction("Action", null).show()
         }
 
         if (findViewById<NestedScrollView>(R.id.item_detail_container) != null) {
@@ -54,6 +60,50 @@ class ItemListActivity : AppCompatActivity() {
         }
 
         setupRecyclerView(findViewById(R.id.item_list))
+
+        // Search bar intent handling
+        handleIntent(intent)
+
+
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
+        if (Intent.ACTION_SEARCH == intent.action) {
+            val query = intent.getStringExtra(SearchManager.QUERY)
+            //use the query to search your data somehow
+
+            //Saving queries of suggestion
+            intent.getStringExtra(SearchManager.QUERY)?.also { query ->
+                SearchRecentSuggestions(
+                    this,
+                    SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE
+                ).saveRecentQuery(query, null)
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the options menu from XML
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_search, menu)
+
+        // Get the SearchView and set the searchable configuration
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        (menu.findItem(R.id.search).actionView as SearchView).apply {
+            // Assumes current activity is the searchable activity
+            setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            isIconifiedByDefault = false // Do not iconify the widget; expand it by default
+            isSubmitButtonEnabled = true
+            isQueryRefinementEnabled = true
+
+        }
+
+        return true
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
@@ -65,10 +115,12 @@ class ItemListActivity : AppCompatActivity() {
             )
     }
 
-    class SimpleItemRecyclerViewAdapter(private val parentActivity: ItemListActivity,
-                                        private val values: List<DummyContent.DummyItem>,
-                                        private val twoPane: Boolean) :
-            RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
+    class SimpleItemRecyclerViewAdapter(
+        private val parentActivity: MainSearchActivity,
+        private val values: List<DummyContent.DummyItem>,
+        private val twoPane: Boolean
+    ) :
+        RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
 
         private val onClickListener: View.OnClickListener
 
@@ -78,14 +130,14 @@ class ItemListActivity : AppCompatActivity() {
                 if (twoPane) {
                     val fragment = ItemDetailFragment()
                         .apply {
-                        arguments = Bundle().apply {
-                            putString(ItemDetailFragment.ARG_ITEM_ID, item.id)
+                            arguments = Bundle().apply {
+                                putString(ItemDetailFragment.ARG_ITEM_ID, item.id)
+                            }
                         }
-                    }
                     parentActivity.supportFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.item_detail_container, fragment)
-                            .commit()
+                        .beginTransaction()
+                        .replace(R.id.item_detail_container, fragment)
+                        .commit()
                 } else {
                     val intent = Intent(v.context, ItemDetailActivity::class.java).apply {
                         putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id)
@@ -97,7 +149,7 @@ class ItemListActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_list_content, parent, false)
+                .inflate(R.layout.item_list_content, parent, false)
             return ViewHolder(view)
         }
 
