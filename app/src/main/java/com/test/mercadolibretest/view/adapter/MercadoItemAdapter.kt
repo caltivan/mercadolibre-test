@@ -30,8 +30,7 @@ class MercadoItemAdapter(
 ) : RecyclerView.Adapter<MercadoItemAdapter.AdapterViewHolder>() {
 
     private val onClickListener: View.OnClickListener
-    private val mViewModel: MainSearchViewModel =
-        ViewModelProvider(parentActivity).get<MainSearchViewModel>(MainSearchViewModel::class.java)
+    private val mViewModel: MainSearchViewModel = ViewModelProvider(parentActivity).get<MainSearchViewModel>(MainSearchViewModel::class.java)
     private val gson = Gson()
 
     init {
@@ -65,9 +64,9 @@ class MercadoItemAdapter(
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ItemListContentBinding =
             DataBindingUtil.inflate(layoutInflater, R.layout.item_list_content, parent, false)
-        return AdapterViewHolder(
-            binding
-        )
+
+
+        return AdapterViewHolder(binding)
     }
 
     /**
@@ -79,6 +78,10 @@ class MercadoItemAdapter(
         with(holder.itemView) {
             tag = item
             setOnClickListener(onClickListener)
+        }
+        if (position == mViewModel.result.value!!.paging.limit - 1) {
+            // load more data here.
+            mViewModel.nextPageSearch()
         }
     }
 

@@ -7,15 +7,15 @@ import retrofit2.http.Headers
 import retrofit2.http.Query
 
 /**
-* Interface that map the API request to the Mercadolibre API
-*/
+ * Interface that map the API request to the Mercadolibre API
+ */
 interface MercadolibreService {
     @Headers(
         "Accept: application/json",
         "Content-Type: application/json"
     )
     @GET("/sites/MLA/search")
-    fun searchItem(@Query("q") artist: String): Call<MercadoResponse>
+    fun searchItem(@Query("q") item: String, @Query("offset") offset: Int): Call<MercadoResponse>
 
 
 }

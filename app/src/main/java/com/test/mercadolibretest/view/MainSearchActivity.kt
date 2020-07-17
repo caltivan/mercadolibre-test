@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
+import android.util.Log
 import android.view.Menu
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
@@ -69,6 +70,7 @@ class MainSearchActivity : AppCompatActivity() {
         pianoViewModel.items.observeForever {
             adapter.notifyDataSetChanged()
         }
+
     }
 
     override fun onNewIntent(intent: Intent) {
