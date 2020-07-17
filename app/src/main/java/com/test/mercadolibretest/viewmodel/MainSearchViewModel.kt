@@ -10,6 +10,9 @@ import com.test.mercadolibretest.util.MyAppExecutors
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * View Model of the MainSearchActivity it will handle the business logic of the View
+ */
 class MainSearchViewModel(application: Application) : AndroidViewModel(application) {
 
     private var mContext = application
