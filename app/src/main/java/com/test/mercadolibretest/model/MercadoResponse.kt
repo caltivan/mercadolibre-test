@@ -1,8 +1,10 @@
 package com.test.mercadolibretest.model
 
 import com.google.gson.annotations.SerializedName
-import com.test.mercadolibretest.Paging
 
+/**
+* Class tha will store the information of the response on the Mercadolibre API
+*/
 data class MercadoResponse(
 
     @SerializedName("state_id") var stateId: String,

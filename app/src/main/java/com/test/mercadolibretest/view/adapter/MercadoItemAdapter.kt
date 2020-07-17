@@ -1,4 +1,4 @@
-package com.test.mercadolibretest.view
+package com.test.mercadolibretest.view.adapter
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,9 +16,14 @@ import com.squareup.picasso.Picasso
 import com.test.mercadolibretest.R
 import com.test.mercadolibretest.databinding.ItemListContentBinding
 import com.test.mercadolibretest.model.MercadoItem
+import com.test.mercadolibretest.view.ItemDetailActivity
+import com.test.mercadolibretest.view.ItemDetailFragment
+import com.test.mercadolibretest.view.MainSearchActivity
 import com.test.mercadolibretest.viewmodel.MainSearchViewModel
 
-
+/**
+ * Adapter to recycleview which will contain all the list of items from the API
+ */
 class MercadoItemAdapter(
     private val parentActivity: MainSearchActivity,
     private val twoPane: Boolean
@@ -36,6 +41,7 @@ class MercadoItemAdapter(
                 val fragment = ItemDetailFragment()
                     .apply {
                         arguments = Bundle().apply {
+                            // It will convert the Item to JSON String and passed to item detail fragment
                             val itemGson = gson.toJson(item)
                             putString(ItemDetailFragment.ARG_ITEM_ID, itemGson)
                         }
@@ -46,6 +52,7 @@ class MercadoItemAdapter(
                     .commit()
             } else {
                 val intent = Intent(v.context, ItemDetailActivity::class.java).apply {
+                    // It will convert the Item to JSON String and passed to item detail fragment
                     val itemGson = gson.toJson(item)
                     putExtra(ItemDetailFragment.ARG_ITEM_ID, itemGson)
                 }
@@ -55,13 +62,17 @@ class MercadoItemAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterViewHolder {
-        // val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list_content, parent, false)
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ItemListContentBinding =
             DataBindingUtil.inflate(layoutInflater, R.layout.item_list_content, parent, false)
-        return AdapterViewHolder(binding)
+        return AdapterViewHolder(
+            binding
+        )
     }
 
+    /**
+     * It will send the item to bind with the view holder and add the on click action to each item
+     */
     override fun onBindViewHolder(holder: AdapterViewHolder, position: Int) {
         val item = mViewModel.items.value!![position]
         holder.bind(mViewModel, item)
@@ -69,14 +80,6 @@ class MercadoItemAdapter(
             tag = item
             setOnClickListener(onClickListener)
         }
-/*        val item = values[position]
-        holder.idView.text = item.id
-        holder.contentView.text = item.content
-
-        with(holder.itemView) {
-            tag = item
-            setOnClickListener(onClickListener)
-        }*/
     }
 
     override fun getItemCount() = mViewModel.items.value!!.size
@@ -85,37 +88,14 @@ class MercadoItemAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         /**
-         * We will use this function to bind instance of Movie to the row
+         * We will use this function to bind instance of Movie to the row, it will bind the view model and the item object to the view
          */
         fun bind(viewModel: MainSearchViewModel, item: MercadoItem) {
             binding.viewModel = viewModel
             binding.item = item
             binding.executePendingBindings()
-            val itemThumbnail = binding.root.findViewById<ImageView>(R.id.itemThumbnail)
-
         }
 
-        companion object {
-            @BindingAdapter("imageUrl")
-            @JvmStatic
-            fun setImageUrl(view: ImageView, imageUrl: String) {
-
-                Picasso.get().load(imageUrl).placeholder(R.drawable.item_placeholder)
-                    .into(view, object : com.squareup.picasso.Callback {
-                        override fun onSuccess() {
-                            //set animations here
-
-                        }
-
-                        override fun onError(e: java.lang.Exception?) {
-                            if (e != null) {
-                                Log.i("PICASSO", e.message)
-                                e.printStackTrace()
-                            }
-                        }
-                    })
-            }
-        }
     }
 
 

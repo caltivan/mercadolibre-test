@@ -1,10 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_detail"
-    style="?android:attr/textAppearanceLarge"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    android:textIsSelectable="true"
-    tools:context=".view.ItemDetailFragment" />
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.test.mercadolibretest.model.MercadoItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/text_margin"
+        android:orientation="horizontal"
+        tools:context=".view.ItemDetailFragment">
+
+        <ImageView
+            android:id="@+id/itemThumbnail"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:adjustViewBounds="true"
+            app:imageUrl="@{item.thumbnail}"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/item_placeholder" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.6" />
+
+        <TextView
+            android:id="@+id/price2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/item_title_label"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline"
+            tools:text="@string/item_title_label" />
+
+        <TextView
+            android:id="@+id/price3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/item_price_label"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/item_detail"
+            tools:text="@string/item_price_label" />
+
+        <TextView
+            android:id="@+id/price4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/item_condition_label"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_detail"
+            tools:text="@string/item_condition_label" />
+
+        <TextView
+            android:id="@+id/price5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/item_available_label"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_detail2"
+            tools:text="@string/item_available_label" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.4" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{item.title}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/guideline"
+            tools:text="1000" />
+
+        <TextView
+            android:id="@+id/item_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{Float.toString(item.price) + item.currencyId}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/price"
+            tools:text="test" />
+
+        <TextView
+            android:id="@+id/item_detail2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{item.condition}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/item_detail"
+            tools:text="test" />
+
+        <TextView
+            android:id="@+id/item_detail3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{Integer.toString(item.availableQuantity)}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toBottomOf="@+id/item_detail2"
+            tools:text="test" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -6,4 +6,11 @@
     <string name="search_hint">Type the product you are looking for…</string>
     <string name="search_title">Start search</string>
 
+    <!-- Detail Item Fragment Strings -->
+    <string name="item_detail_title">Item details</string>
+    <string name="item_title_label">Name</string>
+    <string name="item_price_label">Price</string>
+    <string name="item_available_label">Availability</string>
+    <string name="item_condition_label">Condition:</string>
+
 </resources>

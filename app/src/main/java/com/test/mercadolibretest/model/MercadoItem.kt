@@ -2,6 +2,9 @@ package com.test.mercadolibretest.model
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Class tha will store the information of the searched item on the Mercadolibre API
+ */
 data class MercadoItem(
 
     @SerializedName("id") var id: String,
