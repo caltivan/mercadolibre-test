@@ -30,7 +30,8 @@ class MercadoItemAdapter(
 ) : RecyclerView.Adapter<MercadoItemAdapter.AdapterViewHolder>() {
 
     private val onClickListener: View.OnClickListener
-    private val mViewModel: MainSearchViewModel = ViewModelProvider(parentActivity).get<MainSearchViewModel>(MainSearchViewModel::class.java)
+    private val mViewModel: MainSearchViewModel =
+        ViewModelProvider(parentActivity).get<MainSearchViewModel>(MainSearchViewModel::class.java)
     private val gson = Gson()
 
     init {
@@ -73,19 +74,34 @@ class MercadoItemAdapter(
      * It will send the item to bind with the view holder and add the on click action to each item
      */
     override fun onBindViewHolder(holder: AdapterViewHolder, position: Int) {
-        val item = mViewModel.items.value!![position]
-        holder.bind(mViewModel, item)
-        with(holder.itemView) {
-            tag = item
-            setOnClickListener(onClickListener)
+        mViewModel.items.value.let {
+            if (it != null) {
+                val item = it[position]
+                holder.bind(mViewModel, item)
+                with(holder.itemView) {
+                    tag = item
+                    setOnClickListener(onClickListener)
+                }
+            }
         }
-        if (position == mViewModel.result.value!!.paging.limit - 1) {
-            // load more data here.
-            mViewModel.nextPageSearch()
+        mViewModel.result.value.let {
+            if (it != null && position == it.paging.limit - 1) {
+                // load more data here.
+                mViewModel.nextPageSearch()
+            }
         }
+
     }
 
-    override fun getItemCount() = mViewModel.items.value!!.size
+    override fun getItemCount(): Int {
+        var size = 0
+        mViewModel.items.value.let {
+            if (it != null) {
+                size = it.size
+            }
+        }
+        return size
+    }
 
     class AdapterViewHolder(private val binding: ItemListContentBinding) :
         RecyclerView.ViewHolder(binding.root) {

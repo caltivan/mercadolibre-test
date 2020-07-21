@@ -2,43 +2,35 @@ package com.test.mercadolibretest.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.test.mercadolibretest.model.MercadoItem
 import com.test.mercadolibretest.model.MercadoResponse
-import com.test.mercadolibretest.service.MercadolibreService
-import com.test.mercadolibretest.util.MyAppExecutors
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.test.mercadolibretest.respository.ItemRepository
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * View Model of the MainSearchActivity it will handle the business logic of the View
  */
-class MainSearchViewModel(application: Application) : AndroidViewModel(application) {
+class MainSearchViewModel(application: Application) : KoinComponent, AndroidViewModel(application) {
 
-    private var mContext = application
-    private var retrofit: Retrofit
-    var result: MutableLiveData<MercadoResponse> = MutableLiveData()
+    val repository: ItemRepository by inject()
+    var result: LiveData<MercadoResponse> = MutableLiveData()
     var items: MutableLiveData<ArrayList<MercadoItem>> = MutableLiveData()
     var tempSearch = String()
     var tempOffset = 0
 
     init {
         items.value = ArrayList()
-        retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
     }
 
     fun startItemSearch(query: String) {
         tempSearch = query
         tempOffset = 0
-        MyAppExecutors.instance!!.networkThread.execute {
-            val call =
-                retrofit.create(MercadolibreService::class.java).searchItem(query, 0).execute()
-            val response = call.body() as MercadoResponse
-            result.postValue(response)
-            items.postValue(response.results)
+        result = repository.getMercadoItems(query, 0)
+        result.observeForever {
+            items.value = it.results
         }
     }
 
@@ -47,17 +39,15 @@ class MainSearchViewModel(application: Application) : AndroidViewModel(applicati
         val offset = result.value!!.paging.limit
         tempOffset += offset
         tempSearch.let {
-            MyAppExecutors.instance!!.networkThread.execute {
-                val call =
-                    retrofit.create(MercadolibreService::class.java)
-                        .searchItem(tempSearch, tempOffset)
-                        .execute()
-                val response = call.body() as MercadoResponse
-                result.postValue(response)
-                // items.postValue(response.results)
-                val list = items.value
-                list!!.addAll(response.results)
-                items.postValue(list)
+            result = repository.getMercadoItems(tempSearch, tempOffset)
+            result.observeForever {
+                items.value = it.results
+                val currentItems = items.value
+                val newItems = it.results
+                if (currentItems != null) {
+                    currentItems.addAll(newItems)
+                    items.postValue(currentItems)
+                }
             }
         }
 
