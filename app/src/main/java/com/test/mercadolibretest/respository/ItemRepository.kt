@@ -6,6 +6,7 @@ import com.test.mercadolibretest.model.MercadoItem
 import com.test.mercadolibretest.model.MercadoResponse
 import com.test.mercadolibretest.model.Paging
 import com.test.mercadolibretest.service.MercadolibreService
+import com.test.mercadolibretest.util.MyAppExecutors
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -38,6 +39,4 @@ class ItemRepository : KoinComponent {
             items.postValue(serverResponse.results)
         }
     }
-
-
 }

@@ -1,4 +1,4 @@
-package com.dev.ccodetest.base
+package com.test.mercadolibretest.base
 
 
 import okhttp3.mockwebserver.MockResponse

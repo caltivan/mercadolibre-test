@@ -8,9 +8,9 @@ package com.test.mercadolibretest.di
  * 3) Repository
  */
 fun configureTestAppComponent(baseApi: String) = listOf(
+    ExecutorDependencyTest,
     MockWebServerDIPTest,
     configureNetworkModuleForTest(baseApi),
-    RepoDependency,
-    ExecutorDependencyTest
+    RepoDependency
 )
 

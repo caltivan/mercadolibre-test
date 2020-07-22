@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 fun configureNetworkModuleForTest(baseApi: String) = module {
     single {
-        Retrofit.Builder().baseUrl(MainSearchViewModel.BASE_URL)
+        Retrofit.Builder().baseUrl(baseApi)
             .addConverterFactory(GsonConverterFactory.create()).build()
     }
     factory { get<Retrofit>().create(MercadolibreService::class.java) }

@@ -18,8 +18,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.test.mercadolibretest.R
 import com.test.mercadolibretest.databinding.ActivitySearchItemListBinding
 import com.test.mercadolibretest.provider.SearchSuggestionProvider
+import com.test.mercadolibretest.util.MyAppExecutors
 import com.test.mercadolibretest.view.adapter.MercadoItemAdapter
 import com.test.mercadolibretest.viewmodel.MainSearchViewModel
+import org.koin.android.ext.android.inject
+import org.koin.core.inject
 
 
 /**
@@ -32,6 +35,7 @@ import com.test.mercadolibretest.viewmodel.MainSearchViewModel
  */
 class MainSearchActivity : AppCompatActivity() {
 
+    private val executor: MyAppExecutors by inject()
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -91,9 +95,11 @@ class MainSearchActivity : AppCompatActivity() {
                     SearchSuggestionProvider.AUTHORITY,
                     SearchSuggestionProvider.MODE
                 ).saveRecentQuery(query, null)
-                pianoViewModel.startItemSearch(query)
-                adapter.notifyDataSetChanged()
-                searchResultRecycleView.scrollToPosition(0);
+                executor.networkThread.execute {
+                    pianoViewModel.startItemSearch(query)
+                }
+                searchResultRecycleView.scrollToPosition(0)
+
             }
         }
     }

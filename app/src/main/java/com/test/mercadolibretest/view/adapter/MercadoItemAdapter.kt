@@ -16,10 +16,14 @@ import com.squareup.picasso.Picasso
 import com.test.mercadolibretest.R
 import com.test.mercadolibretest.databinding.ItemListContentBinding
 import com.test.mercadolibretest.model.MercadoItem
+import com.test.mercadolibretest.util.MyAppExecutors
 import com.test.mercadolibretest.view.ItemDetailActivity
 import com.test.mercadolibretest.view.ItemDetailFragment
 import com.test.mercadolibretest.view.MainSearchActivity
 import com.test.mercadolibretest.viewmodel.MainSearchViewModel
+import org.koin.android.ext.android.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Adapter to recycleview which will contain all the list of items from the API
@@ -27,8 +31,9 @@ import com.test.mercadolibretest.viewmodel.MainSearchViewModel
 class MercadoItemAdapter(
     private val parentActivity: MainSearchActivity,
     private val twoPane: Boolean
-) : RecyclerView.Adapter<MercadoItemAdapter.AdapterViewHolder>() {
+) : KoinComponent, RecyclerView.Adapter<MercadoItemAdapter.AdapterViewHolder>() {
 
+    private val executor: MyAppExecutors by inject()
     private val onClickListener: View.OnClickListener
     private val mViewModel: MainSearchViewModel =
         ViewModelProvider(parentActivity).get<MainSearchViewModel>(MainSearchViewModel::class.java)
@@ -90,7 +95,9 @@ class MercadoItemAdapter(
                 "PAGING",
                 "POSITION = " + position + " - offset = " + mViewModel.tempOffset + " - MAX = " + mViewModel.paging.value!!.total
             )
-            mViewModel.nextPageSearch()
+            executor.networkThread.execute {
+                mViewModel.nextPageSearch()
+            }
         }
     }
 

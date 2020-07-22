@@ -16,11 +16,11 @@ import org.koin.core.inject
  */
 class MainSearchViewModel(application: Application) : KoinComponent, AndroidViewModel(application) {
 
-    private val executor: MyAppExecutors by inject()
     private val repository: ItemRepository by inject()
+    private var tempSearch = String()
+
     var paging: LiveData<Paging> = MutableLiveData()
     var items: LiveData<ArrayList<MercadoItem>> = MutableLiveData()
-    var tempSearch = String()
     var tempOffset = 0
 
     init {
@@ -31,18 +31,14 @@ class MainSearchViewModel(application: Application) : KoinComponent, AndroidView
     fun startItemSearch(query: String) {
         tempSearch = query
         tempOffset = 0
-        executor.networkThread.execute {
-            repository.fetchMercadoItems(query, 0)
-        }
+        repository.fetchMercadoItems(query, 0)
     }
 
     fun nextPageSearch() {
         val offset = paging.value!!.limit
         tempOffset += offset
         tempSearch.let {
-            executor.networkThread.execute {
-                repository.fetchMercadoItems(tempSearch, tempOffset)
-            }
+            repository.fetchMercadoItems(tempSearch, tempOffset)
         }
 
     }
