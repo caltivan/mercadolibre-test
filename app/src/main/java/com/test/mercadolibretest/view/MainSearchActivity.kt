@@ -32,6 +32,7 @@ import com.test.mercadolibretest.viewmodel.MainSearchViewModel
  */
 class MainSearchActivity : AppCompatActivity() {
 
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -39,6 +40,7 @@ class MainSearchActivity : AppCompatActivity() {
     private var twoPane: Boolean = false
     private lateinit var pianoViewModel: MainSearchViewModel
     private lateinit var adapter: MercadoItemAdapter
+    private lateinit var searchResultRecycleView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,8 +63,7 @@ class MainSearchActivity : AppCompatActivity() {
             // activity should be in two-pane mode.
             twoPane = true
         }
-
-        setupRecyclerView(findViewById(R.id.item_list))
+        setupRecyclerView()
 
         // Search bar intent handling
         handleSearchIntent(intent)
@@ -92,7 +93,7 @@ class MainSearchActivity : AppCompatActivity() {
                 ).saveRecentQuery(query, null)
                 pianoViewModel.startItemSearch(query)
                 adapter.notifyDataSetChanged()
-
+                searchResultRecycleView.scrollToPosition(0);
             }
         }
     }
@@ -116,14 +117,12 @@ class MainSearchActivity : AppCompatActivity() {
         return true
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView) {
-        adapter = MercadoItemAdapter(
-            this,
-            twoPane
-        )
-        recyclerView.adapter = adapter
-        val dividerItemDecoration = DividerItemDecoration(recyclerView.context, 1)
-        recyclerView.addItemDecoration(dividerItemDecoration)
+    private fun setupRecyclerView() {
+        searchResultRecycleView = findViewById(R.id.item_list)
+        adapter = MercadoItemAdapter(this, twoPane)
+        searchResultRecycleView.adapter = adapter
+        val dividerItemDecoration = DividerItemDecoration(searchResultRecycleView.context, 1)
+        searchResultRecycleView.addItemDecoration(dividerItemDecoration)
     }
 
 }

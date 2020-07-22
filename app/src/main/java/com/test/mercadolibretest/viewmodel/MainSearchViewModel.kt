@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.test.mercadolibretest.model.MercadoItem
-import com.test.mercadolibretest.model.MercadoResponse
+import com.test.mercadolibretest.model.Paging
 import com.test.mercadolibretest.respository.ItemRepository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -15,40 +15,28 @@ import org.koin.core.inject
  */
 class MainSearchViewModel(application: Application) : KoinComponent, AndroidViewModel(application) {
 
-    val repository: ItemRepository by inject()
-    var result: LiveData<MercadoResponse> = MutableLiveData()
-    var items: MutableLiveData<ArrayList<MercadoItem>> = MutableLiveData()
+    private val repository: ItemRepository by inject()
+    var paging: LiveData<Paging> = MutableLiveData()
+    var items: LiveData<ArrayList<MercadoItem>> = MutableLiveData()
     var tempSearch = String()
     var tempOffset = 0
 
     init {
-        items.value = ArrayList()
+        items = repository.getMercadoItems()
+        paging = repository.getMercadoPaging()
     }
 
     fun startItemSearch(query: String) {
         tempSearch = query
         tempOffset = 0
-        result = repository.getMercadoItems(query, 0)
-        result.observeForever {
-            items.value = it.results
-        }
+        repository.fetchMercadoItems(query, 0)
     }
 
     fun nextPageSearch() {
-        val total = result.value!!.paging.total
-        val offset = result.value!!.paging.limit
+        val offset = paging.value!!.limit
         tempOffset += offset
         tempSearch.let {
-            result = repository.getMercadoItems(tempSearch, tempOffset)
-            result.observeForever {
-                items.value = it.results
-                val currentItems = items.value
-                val newItems = it.results
-                if (currentItems != null) {
-                    currentItems.addAll(newItems)
-                    items.postValue(currentItems)
-                }
-            }
+            repository.fetchMercadoItems(tempSearch, tempOffset)
         }
 
     }

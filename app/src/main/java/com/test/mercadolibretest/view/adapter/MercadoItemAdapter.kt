@@ -84,13 +84,14 @@ class MercadoItemAdapter(
                 }
             }
         }
-        mViewModel.result.value.let {
-            if (it != null && position == it.paging.limit - 1) {
-                // load more data here.
-                mViewModel.nextPageSearch()
-            }
+        if (position >= mViewModel.tempOffset - 1) {
+            // load more data here.
+            Log.i(
+                "PAGING",
+                "POSITION = " + position + " - offset = " + mViewModel.tempOffset + " - MAX = " + mViewModel.paging.value!!.total
+            )
+            mViewModel.nextPageSearch()
         }
-
     }
 
     override fun getItemCount(): Int {
