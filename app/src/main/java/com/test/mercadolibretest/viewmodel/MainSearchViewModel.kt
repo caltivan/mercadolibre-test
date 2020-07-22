@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.test.mercadolibretest.model.MercadoItem
 import com.test.mercadolibretest.model.Paging
 import com.test.mercadolibretest.respository.ItemRepository
+import com.test.mercadolibretest.util.MyAppExecutors
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -15,6 +16,7 @@ import org.koin.core.inject
  */
 class MainSearchViewModel(application: Application) : KoinComponent, AndroidViewModel(application) {
 
+    private val executor: MyAppExecutors by inject()
     private val repository: ItemRepository by inject()
     var paging: LiveData<Paging> = MutableLiveData()
     var items: LiveData<ArrayList<MercadoItem>> = MutableLiveData()
@@ -29,14 +31,18 @@ class MainSearchViewModel(application: Application) : KoinComponent, AndroidView
     fun startItemSearch(query: String) {
         tempSearch = query
         tempOffset = 0
-        repository.fetchMercadoItems(query, 0)
+        executor.networkThread.execute {
+            repository.fetchMercadoItems(query, 0)
+        }
     }
 
     fun nextPageSearch() {
         val offset = paging.value!!.limit
         tempOffset += offset
         tempSearch.let {
-            repository.fetchMercadoItems(tempSearch, tempOffset)
+            executor.networkThread.execute {
+                repository.fetchMercadoItems(tempSearch, tempOffset)
+            }
         }
 
     }

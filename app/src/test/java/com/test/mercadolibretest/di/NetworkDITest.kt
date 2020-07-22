@@ -7,14 +7,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
- * Network dependency module.
- * Provides Retrofit dependency with OkHttp logger.
+ * Network module test configuration with mockserver url.
  */
-val networkDependency = module {
-
+fun configureNetworkModuleForTest(baseApi: String) = module {
     single {
-        Retrofit.Builder().baseUrl(MainSearchViewModel.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()
-
+        Retrofit.Builder().baseUrl(MainSearchViewModel.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create()).build()
     }
     factory { get<Retrofit>().create(MercadolibreService::class.java) }
 }

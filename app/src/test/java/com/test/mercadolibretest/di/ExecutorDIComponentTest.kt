@@ -7,7 +7,7 @@ import org.koin.dsl.module
  * Repository DI module.
  * Provides Repo dependency.
  */
-val ExecutorDependency = module {
+val ExecutorDependencyTest = module {
 
     single {
         MyAppExecutors.instance
